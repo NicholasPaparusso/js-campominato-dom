@@ -74,6 +74,7 @@ select{
   border: 1px solid black;
   width: calc(100% / 10);
   height: calc(100% / 10);
+  cursor: pointer;
 }
 
 .cell-81{
@@ -84,6 +85,7 @@ select{
   border: 1px solid black;
   width: calc(100% / 9);
   height: calc(100% / 9);
+  cursor: pointer;
 }
 
 .cell-49{
@@ -94,6 +96,7 @@ select{
   border: 1px solid black;
   width: calc(100% / 7);
   height: calc(100% / 7);
+  cursor: pointer;
 }
 
 .blue{

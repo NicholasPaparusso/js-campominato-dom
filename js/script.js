@@ -47,18 +47,30 @@ function createGrid(cellNumbers){
   let grid = document.createElement('div')
   grid.classList.add('grid-container');
   for(let i = 0; i < cellNumbers; i++){
-    let cell = document.createElement('div');
-    cell.classList.add(`cell-${cellNumbers}`);
+   const cell = generateCell(levelCell,i+1);
     grid.append(cell);
   }
   main.appendChild(grid); 
+  
 }
 
+
+
 // Funzione per assegnare ID e contenuto alle celle + eventlistener al click
-function generateCell(cellId,cellNumbers){
-  cell.cellId = cellId;
-  cell.innerHTML = `<small>${cellId[i]}</small>`
+function generateCell(cellNumbers , cellId){
+  let cell = document.createElement('div');
+  cell.classList.add(`cell-${cellNumbers}`);
+  cell.cellId = cellId ;
+  cell.innerHTML = `<small>${cellId}</small>`
+  cell.addEventListener('click', selectedCell);
+
+  return cell;
 } 
 
+
+
+
+function selectedCell(cellId){
+}
 
 
