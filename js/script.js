@@ -25,12 +25,12 @@ const main = document.querySelector('.main-wrapper');
 // dichiaro le variabili globali
 let diff;
 let score = 0;
-const BOMBSNUMBER = 16;
+const BOMBSNUMBER = 3;
 const level = ['100','81','49']
 let bombs = [];
 let levelCell = document.getElementById('diff').value;
-
-
+let endgame = false;
+let msg;
 
 //eventListner al bottone di avvio
 btn.addEventListener('click', function(){
@@ -40,6 +40,8 @@ btn.addEventListener('click', function(){
 //Funzione che iniziallizza il gioco
 function init(){
   createGrid(levelCell);
+  bombs = generateBombs(levelCell);
+  console.log(bombs);
 }
 
 // Funzione per creare la griglia 
@@ -59,6 +61,7 @@ function createGrid(cellNumbers){
 // Funzione per assegnare ID e contenuto alle celle + eventlistener al click
 function generateCell(cellNumbers , cellId){
   let cell = document.createElement('div');
+  cell.className='square';
   cell.classList.add(`cell-${cellNumbers}`);
   cell.cellId = cellId ;
   cell.innerHTML = `<small>${cellId}</small>`
@@ -68,9 +71,41 @@ function generateCell(cellNumbers , cellId){
 } 
 
 
+// Funzione per randomizzare i numeri
+function randomBombsnum(min , max){
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
+//Funzione per creare randomicamente le bombe all'interno della griglia 
+function generateBombs(cellNumbers){
+  const generatedBombs = [];
+  while(generatedBombs.length < BOMBSNUMBER){
+  const bomb = randomBombsnum(1,cellNumbers);
+  if(!generatedBombs.includes(bomb)){
+    generatedBombs.push(bomb);
+    }
+  }
+  return generatedBombs;
+}
+ 
 
-function selectedCell(cellId){
+function selectedCell(  ){
+  if (!bombs.includes(this.cellId)){
+    this.classList.add('no-bomb');
+    score++;
+    const cells = document.getElementsByClassName('square');
+    console.log(cells);
+    if(score === cells.length - BOMBSNUMBER);{
+      let msg = document.createElement('span');
+      msg.innerHTML ="Hai vinto !!!  "
+      main.append(msg);
+      endgame = true;
+
+    }
+  }else{
+    this.classList.add('bomb');
+    endgame = true;
+  }
 }
 
 
