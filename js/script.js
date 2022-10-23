@@ -20,25 +20,27 @@ Al termine della partita il software deve comunicare il punteggio, cioè il nume
 // dichiaro gli elementi del DOM
 
 const btn = document.querySelector('.btn');
-const main = document.querySelector('.main-wrapper');
+const main = document.querySelector('.game-wrapper');
 
 // dichiaro le variabili globali
 let diff;
 let score = 0;
-const BOMBSNUMBER = 3;
+const BOMBSNUMBER = 16;
 const level = ['100','81','49']
 let bombs = [];
-let levelCell = document.getElementById('diff').value;
-let endgame = false;
-let msg;
-
+let grid;
+let levelCell;
 //eventListner al bottone di avvio
 btn.addEventListener('click', function(){
+  reset();
   init();
+  
 })
 
+console.log(levelCell);
 //Funzione che iniziallizza il gioco
 function init(){
+  levelCell = document.getElementById('diff').value;
   createGrid(levelCell);
   bombs = generateBombs(levelCell);
   console.log(bombs);
@@ -46,14 +48,14 @@ function init(){
 
 // Funzione per creare la griglia 
 function createGrid(cellNumbers){
-  let grid = document.createElement('div')
+  
+  grid = document.createElement('div')
   grid.classList.add('grid-container');
   for(let i = 0; i < cellNumbers; i++){
    const cell = generateCell(levelCell,i+1);
     grid.append(cell);
   }
   main.appendChild(grid); 
-  
 }
 
 
@@ -88,24 +90,62 @@ function generateBombs(cellNumbers){
   return generatedBombs;
 }
  
-
+//Funzione per azionare il comportamento delle celle e quindi del gioco stesso al click
 function selectedCell(  ){
   if (!bombs.includes(this.cellId)){
     this.classList.add('no-bomb');
     score++;
-    const cells = document.getElementsByClassName('square');
-    console.log(cells);
-    if(score === cells.length - BOMBSNUMBER);{
-      let msg = document.createElement('span');
-      msg.innerHTML ="Hai vinto !!!  "
-      main.append(msg);
-      endgame = true;
-
-    }
+ 
   }else{
-    this.classList.add('bomb');
-    endgame = true;
+    endgame(false);
+
   }
+  const cells = document.getElementsByClassName('square');
+  if(score === cells.length - BOMBSNUMBER){
+      endgame(true);
+    }
+    console.log(`Punteggio ${score}/${cells.length-BOMBSNUMBER}`);
+}
+
+//Funzione per la fine del gioco win or lose
+function endgame(isWin){
+  let msg = document.createElement('span');
+  msg.classList.add('win-lose-msg');
+  const cells = document.getElementsByClassName('square');
+if(isWin){
+    msg.innerHTML = 'Hai vinto !!! Hai selezionato tutte le caselle senza bombe';
+    main.append(msg);
+  }else{
+    msg.innerHTML= `Hai perso !!! Hai fatto scoppiare una bomba, hai fatto ${score} punti su ${cells.length - BOMBSNUMBER} Possibilità`;
+    main.append(msg);
+    freeze();
+    showBombs();
+  }
+}
+
+function freeze(){
+ const screenFrozen = document.createElement('div');
+ screenFrozen.classList.add('freeze');
+ grid.append(screenFrozen);
+}
+
+function showBombs(){
+  const cells = document.getElementsByClassName('square');
+
+  for(let i = 0; i < cells.length; i++){
+    const cell = cells[i]
+
+    if(bombs.includes(cell.cellId)){
+      cell.classList.add('bomb');
+      }else{
+        cell.classList.add('no-bomb');
+      }
+  }
+}
+
+function reset(){
+  score = 0;
+  main.innerHTML='';
 }
 
 
